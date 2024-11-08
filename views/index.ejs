@@ -1,0 +1,40 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Events</title>
+    <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+    <h1>Booking Events</h1>
+
+    <!-- Form to add a new event -->
+    <form action="/add-event" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" name="title" required>
+        <label for="description">Description:</label>
+        <input type="text" name="description" required>
+        <label for="date">Date:</label>
+        <input type="date" name="date" required>
+        <button type="submit">Add Event</button>
+    </form>
+
+    <h2>All Events:</h2>
+    <ul>
+        <% events.forEach(event => { %>
+            <li>
+                <strong><%= event.title %></strong>
+                <p><%= event.description %></p>
+                <p><%= event.date %></p>
+                <!-- Form to delete an event -->
+                <form action="/delete-event" method="POST" style="display:inline;">
+                    <input type="hidden" name="eventId" value="<%= event._id %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
