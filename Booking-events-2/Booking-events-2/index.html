@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Events</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>Booking Events</h1>
+  </header>
+  <main>
+    <!-- Form to add a new event -->
+    <form action="/add-event" method="POST">
+      <label for="title">Title:</label>
+      <input type="text" name="title" required>
+      <label for="description">Description:</label>
+      <input type="text" name="description" required>
+      <label for="date">Date:</label>
+      <input type="date" name="date" required>
+      <button type="submit">Add Event</button>
+    </form>
+
+    <!-- Display all events -->
+    <h2>All Events:</h2>
+    <ul id="eventsList"></ul>
+  </main>
+
+  <script>
+    // Fetch and display events from the server
+    async function fetchEvents() {
+      try {
+        const response = await fetch('/api/events');
+        const events = await response.json();
+
+        const eventsList = document.getElementById('eventsList');
+        eventsList.innerHTML = ''; // Clear previous list
+
+        events.forEach(event => {
+          const eventItem = document.createElement('li');
+          eventItem.innerHTML = `
+            <strong>${event.title}</strong>
+            <p>${event.description}</p>
+            <p>${new Date(event.date).toLocaleDateString()}</p>
+            <form action="/delete-event" method="POST" style="display: inline">
+              <input type="hidden" name="eventId" value="${event._id}">
+              <button type="submit">Delete</button>
+            </form>
+          `;
+          eventsList.appendChild(eventItem);
+        });
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    }
+
+    // Initial fetch
+    fetchEvents();
+  </script>
+</body>
+
+</html>
